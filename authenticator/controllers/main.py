@@ -7,11 +7,10 @@ from datetime import datetime, timedelta
 from odoo import exceptions, fields, SUPERUSER_ID, api, _
 from odoo.addons.web.controllers.main import ensure_db, set_cookie_and_redirect, login_and_redirect
 from odoo import registry as registry_get
-from odoo.tools.config import configmanager
+from odoo.tools import config
 from odoo.exceptions import AccessDenied
 from odoo.http import request, route, Controller
 
-config = configmanager()
 TOKENS = {}
 
 

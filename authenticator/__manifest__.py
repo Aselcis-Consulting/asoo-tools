@@ -3,7 +3,7 @@
 {
     "name": 'Authenticator',
     "summary": 'Authentication from Aselcis Deployment Platform',
-    "version": '11.0.1.0',
+    "version": '12.0.1.0',
     "depends": ['base'],
     "author": "Aselcis Consulting",
     "category": 'System',
@@ -13,5 +13,6 @@
 
         """,
     "data": [],
-    "auto_install": True
+    "auto_install": True,
+    "installable": True,
 }

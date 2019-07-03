@@ -10,10 +10,9 @@ class ResUsers(models.Model):
     authenticator_token = fields.Char('Authenticator token')
     authenticator_expire_in = fields.Datetime('Authenticator token expire in')
 
-    @api.model
-    def check_credentials(self, password):
+    def _check_credentials(self, password):
         try:
-            super(ResUsers, self).check_credentials(password)
+            super(ResUsers, self)._check_credentials(password)
         except AccessDenied:
             user = self.sudo().search([('id', '=', self._uid), ('authenticator_token', '=', password)])
             if not user:
