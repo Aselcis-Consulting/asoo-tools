@@ -14,6 +14,9 @@ class ResUsers(models.Model):
         try:
             super(ResUsers, self)._check_credentials(password)
         except AccessDenied:
-            user = self.sudo().search([('id', '=', self._uid), ('authenticator_token', '=', password)])
+            user = self.sudo().search([
+                ('id', '=', self._uid),
+                ('authenticator_token', '=', password)
+            ])
             if not user:
                 raise AccessDenied()
