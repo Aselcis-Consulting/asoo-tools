@@ -21,7 +21,39 @@ class Authenticator(Controller):
         registry = registry_get(db)
         with registry.cursor() as cr:
             env = api.Environment(cr, SUPERUSER_ID, {})
-            users = env['res.users'].sudo().search_read([('share', '=', False)], ['id', 'login', 'name'])
+            users = env['res.users'].sudo().search_read([
+                ('share', '=', False)
+            ], ['id', 'login', 'name', 'groups_id'])
+            ResGroups = env['res.groups']
+            IrModelData = env['ir.model.data']
+            admin_group_id = env.ref('base.group_erp_manager').id
+
+            group_ids = []
+            for app, kind, gs in ResGroups.sudo().get_groups_by_application():
+                if kind == 'selection':
+                    group_ids.extend(gs.ids)
+
+            for user in users:
+                # TODO: Implement user lang to translate groups names
+                category_ids = []
+                user['groups_id'] = ResGroups.sudo().search_read([
+                    ('id', 'in', [
+                     g for g in user['groups_id'] if g in group_ids])
+                ], ['id', 'full_name', 'category_id'], order='id desc')
+                user['is_admin'] = True if admin_group_id in [g['id']
+                                                              for g in user['groups_id']] else False
+                user_groups_id = []
+                for group in user['groups_id']:
+                    if group['category_id'][0] not in category_ids:
+                        group_info = IrModelData.sudo().search_read([
+                            ('model', '=', 'res.groups'),
+                            ('res_id', '=', group.get('id'))
+                        ], ['module', 'name'], order='id', limit=1)
+                        group['external_id'] = '{}.{}'.format(
+                            group_info[0]['module'], group_info[0]['name']) if group_info else False
+                        category_ids.append(group['category_id'][0])
+                        user_groups_id.append(group)
+                user['groups_id'] = user_groups_id
         return users
 
     @route("/_auth/token", type="json", auth="none")
