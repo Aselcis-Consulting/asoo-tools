@@ -19,7 +19,7 @@ class Authenticator(Controller):
 
     @route("/_auth/info", type="json", auth="none")
     def info(self, db, admin_passwd):
-        if not config.verify_admin_password(admin_passwd):
+        if tools.config['admin_passwd'] != admin_passwd:
             raise AccessDenied()
 
         registry = registry_get(db)
