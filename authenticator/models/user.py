@@ -12,7 +12,7 @@ class ResUsers(models.Model):
 
     def _check_credentials(self, password, env):
         try:
-            super(ResUsers, self)._check_credentials(password)
+            super(ResUsers, self)._check_credentials(password, env)
         except AccessDenied:
             user = self.sudo().search([
                 ('id', '=', self._uid),
