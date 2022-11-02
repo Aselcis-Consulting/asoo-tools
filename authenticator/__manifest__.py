@@ -3,7 +3,7 @@
 {
     "name": 'Authenticator',
     "summary": 'Authentication from Asoo',
-    "version": '15.0.1.0',
+    "version": '16.0.1.0',
     "depends": ['base'],
     "author": "Aselcis Consulting",
     "category": 'System',
